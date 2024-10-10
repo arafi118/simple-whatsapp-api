@@ -1,0 +1,26 @@
+require('dotenv').config();
+
+const fastify = require('fastify')({
+  logger: true
+});
+
+require('./config/socket')(fastify);
+require('./config/helper')(fastify);
+require('./config/model')(fastify);
+require('./config/config')(fastify);
+require('./config/routes')(fastify);
+
+const port = process.env.APP_PORT || 3000;
+const start = async () => {
+  try {
+    await fastify.listen({
+      port
+    });
+    fastify.log.info(`Server running at http://localhost:${port}`);
+  } catch (err) {
+    fastify.log.error(err);
+    process.exit(1);
+  }
+};
+
+start();
