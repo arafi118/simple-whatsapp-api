@@ -9,8 +9,6 @@
     transports: ['polling']
   });
 
-  console.log(socket);
-
   socket.on('connected', (res) => {
     console.log('Connected to the server. Socket ID:', res.id);
   });
