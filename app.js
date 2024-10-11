@@ -10,14 +10,18 @@ require('./config/model')(fastify);
 require('./config/config')(fastify);
 require('./config/routes')(fastify);
 
+if (typeof (PhusionPassenger) != 'undefined') {
+  PhusionPassenger.configure({
+    autoInstall: false
+  });
+}
+
 const port = process.env.APP_PORT || 3000;
 const start = async () => {
   var server = process.env.APP_HOST;
 
   try {
-    fastify.listen({
-      port
-    })
+    fastify.listen(port)
     server += ':' + port;
 
     fastify.log.info(`Server running at ${server}`);
