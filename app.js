@@ -19,12 +19,13 @@ if (typeof (PhusionPassenger) != 'undefined') {
 const port = process.env.APP_PORT || 3000;
 const start = async () => {
   try {
-    if (typeof (PhusionPassenger) != 'undefined') {
-      fastify.listen('passenger');
-    } else {
+    if (typeof (PhusionPassenger) !== 'undefined') {
       fastify.listen({
-        port
-      });
+        path: 'passenger',
+        host: '127.0.0.1'
+      })
+    } else {
+      fastify.listen(port)
     }
     fastify.log.info(`Server running at http://localhost:${port}`);
   } catch (err) {
