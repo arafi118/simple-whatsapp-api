@@ -4,18 +4,22 @@ const {
   Server
 } = require('socket.io');
 
-const Cors = process.env.CORS_ORIGINS.replace(/"/g, '');
+const Cors = process.env.CORS_ORIGINS.split(',');
 module.exports = (fastify) => {
   const io = new Server(fastify.server, {
     cors: {
       origin: (origin, callback) => {
-        if (!origin ||
-          origin === 'http://localhost' ||
-          origin === 'http://127.0.0.1' ||
-          new RegExp(`^https://([a-z0-9-]+\\.)?${allowedOrigin.replace(/^https?:\/\//, '')}$`).test(origin)) {
+        if (!origin) return callback(null, true);
+
+        const validasi = corsOrigins.some(allowedOrigin => {
+          const regex = new RegExp(allowedOrigin.replace(/\*/g, '.*'));
+          return regex.test(origin);
+        });
+
+        if (validasi) {
           callback(null, true);
         } else {
-          callback(new Error('Not allowed by CORS'));
+          callback(new Error('Domain tidak terdaftar'));
         }
       },
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
