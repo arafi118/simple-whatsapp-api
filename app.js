@@ -15,7 +15,9 @@ const start = async () => {
   var server = process.env.APP_HOST;
 
   try {
-    fastify.listen(port)
+    fastify.listen({
+      port
+    })
     server += ':' + port;
 
     fastify.log.info(`Server running at ${server}`);
