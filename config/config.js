@@ -10,18 +10,11 @@ module.exports = (fastify) => {
   });
 
   fastify.register(require('@fastify/cors'), {
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-
-      const validasi = Cors.some(domain => {
-        const regex = new RegExp(domain.replace(/\*/g, '.*'));
-        return regex.test(origin);
-      });
-
-      if (validasi) {
-        callback(null, true);
+    origin: (origin, cb) => {
+      if (!origin || Cors.some(domain => new RegExp(domain.replace(/\*/g, '.*')).test(origin))) {
+        cb(null, true);
       } else {
-        callback(new Error('Domain tidak terdaftar'));
+        cb(new Error('Not allowed'));
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
