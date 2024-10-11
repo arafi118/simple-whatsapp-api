@@ -20,7 +20,7 @@ const port = process.env.APP_PORT || 3000;
 const start = async () => {
   try {
     if (typeof (PhusionPassenger) != 'undefined') {
-      fastify.listen(passenger);
+      fastify.listen('passenger');
     } else {
       fastify.listen({
         port
