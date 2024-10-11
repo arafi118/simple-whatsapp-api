@@ -11,8 +11,8 @@ module.exports = (fastify) => {
       origin: (origin, callback) => {
         if (!origin) return callback(null, true);
 
-        const validasi = corsOrigins.some(allowedOrigin => {
-          const regex = new RegExp(allowedOrigin.replace(/\*/g, '.*'));
+        const validasi = Cors.some(domain => {
+          const regex = new RegExp(domain.replace(/\*/g, '.*'));
           return regex.test(origin);
         });
 
