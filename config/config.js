@@ -11,14 +11,14 @@ module.exports = (fastify) => {
 
   fastify.register(require('@fastify/cors'), {
     origin: (origin, cb) => {
+      console.log(`API received: ${origin}`);
       if (!origin || Cors.some(domain => new RegExp(domain.replace(/\*/g, '.*')).test(origin))) {
         cb(null, true);
       } else {
         cb(new Error('Not allowed'));
       }
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    methods: ['GET', 'POST', 'PUT', 'DELETE']
   });
 
   fastify.register(require('@fastify/view'), {

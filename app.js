@@ -4,10 +4,11 @@ const fastify = require('fastify')({
   logger: true
 });
 
-require('./config/socket')(fastify);
+
 require('./config/helper')(fastify);
 require('./config/model')(fastify);
-require('./config/config')(fastify);
+
+require('./config/socket')(fastify);
 require('./config/routes')(fastify);
 
 if (typeof (PhusionPassenger) != 'undefined') {
@@ -16,6 +17,7 @@ if (typeof (PhusionPassenger) != 'undefined') {
   });
 }
 
+require('./config/config')(fastify);
 const port = process.env.APP_PORT || 3000;
 const start = async () => {
   var server = process.env.APP_HOST;
@@ -27,7 +29,9 @@ const start = async () => {
         host: '127.0.0.1'
       })
     } else {
-      fastify.listen(port)
+      fastify.listen({
+        port
+      })
       server += ':' + port;
     }
 
