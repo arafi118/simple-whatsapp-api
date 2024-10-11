@@ -24,7 +24,7 @@ const start = async () => {
     if (typeof (PhusionPassenger) !== 'undefined') {
       fastify.listen({
         path: 'passenger',
-        host: '0.0.0.0'
+        host: '127.0.0.1'
       })
     } else {
       fastify.listen(port)
