@@ -1,23 +1,88 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
-  integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
-  crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
-  integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous"></script>
+<!DOCTYPE html>
+<html lang="en">
 
-<script>
-  const socket = io('/', {
-    transports: ['polling']
-  });
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <meta name="Description" content="Enter your description here" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <title>Title</title>
+</head>
 
-  socket.on('connected', (res) => {
-    console.log('Connected to the server. Socket ID:', res.id);
-  });
+<body class="pt-3">
 
-  socket.on('connect_error', (error) => {
-    console.error('Connection error:', error);
-  });
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 offset-md-4">
+        <div class="card">
+          <div class="card-body">
+            <ul class="list-group list-group-flush rounded" id="ListConnection">
+              <li class="list-group-item active fw-bold text-center">
+                Webcosket Connection
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  socket.on('QR', (result) => {
-    console.log(result)
-  })
-</script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+    integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO" crossorigin="anonymous">
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.1.0/js/bootstrap.min.js"></script>
+
+  <script>
+    let ListContainer = $('#ListConnection')
+    let Reconnect = 0;
+    const MaxReconnect = 3;
+
+    const socket = io('/', {
+      transports: ['polling']
+    });
+
+    socket.on('connected', (res) => {
+      console.log('Connected to the server. Socket ID:', res.id);
+      var List = $(
+        '<li class="list-group-item list-group-item-success">Connection Success : <div class="fw-bold text-center">#' +
+        res.id + '</div></li>')
+      ListContainer.append(List)
+
+      Reconnect = 0;
+    });
+
+    socket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
+      var List = $('<li class="list-group-item list-group-item-danger">Connection Error</li>')
+      ListContainer.append(List)
+    });
+
+    socket.on('reconnect_attempt', () => {
+      console.log(`Reconnect attempt #${Reconnect}`);
+      var List = $('<li class="list-group-item">Recconecting #' + Reconnect + '</li>')
+      ListContainer.append(List)
+
+      Reconnect++;
+      if (Reconnect >= MaxReconnect) {
+        socket.disconnect();
+      }
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+      var List = $('<li class="list-group-item list-group-item-danger fw-bold">Disconnect</li>')
+      ListContainer.append(List)
+    });
+
+    socket.on('QR', (result) => {
+      console.log(result)
+    })
+  </script>
+</body>
+
+</html>
