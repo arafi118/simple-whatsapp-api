@@ -15,14 +15,14 @@ module.exports = (fastify) => {
 
       console.log(Cors, origin);
 
-      const CekDomain = Cors.some(domain => {
+      const regexes = Cors.map(domain => {
         const sanitizedDomain = domain.replace('*.', '(.*\\.)?').replace(/\./g, '\\.');
-        const regex = new RegExp(`^https?:\\/\\/${sanitizedDomain}$`);
-
-        return regex.test(origin);
+        return new RegExp(`^https?:\\/\\/${sanitizedDomain}$`);
       });
 
-      if (CekDomain) {
+      const isAllowed = regexes.some(regex => regex.test(origin));
+
+      if (isAllowed) {
         cb(null, true);
       } else {
         cb(new Error('Not allowed'), false);
