@@ -25,7 +25,8 @@ module.exports = {
     if (whatsapp) {
       return res.send({
         success: false,
-        msg: 'Token sudah terdaftar.'
+        msg: 'Token sudah terdaftar.',
+        data: whatsapp
       });
     }
 
@@ -38,6 +39,11 @@ module.exports = {
             nama,
             token
           });
+
+          const Connect = await req.server.io.to(socketId).emit('ClientConnect', {
+            success: true,
+            msg: 'Whatsapp aktif.'
+          })
         },
         onQR: async (url) => {
           const Qr = await req.server.io.to(socketId).emit('QR', {

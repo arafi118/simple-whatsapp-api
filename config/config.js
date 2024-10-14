@@ -11,11 +11,19 @@ module.exports = (fastify) => {
 
   fastify.register(require('@fastify/cors'), {
     origin: (origin, cb) => {
-      console.log(`API received: ${origin}`);
-      if (!origin || Cors.some(domain => new RegExp(domain.replace(/\*/g, '.*')).test(origin))) {
+      if (!origin) return cb(null, true);
+
+      const CekDomain = Cors.some(domain => {
+        const sanitizedDomain = domain.replace('*.', '(.*\\.)?').replace(/\./g, '\\.');
+        const regex = new RegExp(`^https?:\\/\\/${sanitizedDomain}$`);
+
+        return regex.test(origin);
+      });
+
+      if (CekDomain) {
         cb(null, true);
       } else {
-        cb(new Error('Not allowed'));
+        cb(new Error('Not allowed'), false);
       }
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE']
@@ -27,4 +35,6 @@ module.exports = (fastify) => {
     },
     root: path.join(__dirname, '../resources', 'views'),
   });
+
+  fastify.register(require('@fastify/formbody'));
 };

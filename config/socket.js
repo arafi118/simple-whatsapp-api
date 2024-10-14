@@ -5,7 +5,12 @@ const {
 } = require('socket.io');
 
 module.exports = (fastify) => {
-  const io = new Server(fastify.server);
+  const io = new Server(fastify.server, {
+    cors: {
+      origin: '*',
+      methods: ['GET', 'POST'],
+    }
+  });
 
   io.on('connection', (socket) => {
     console.log('New client connected');
