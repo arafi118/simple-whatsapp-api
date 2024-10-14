@@ -13,6 +13,8 @@ module.exports = (fastify) => {
     origin: (origin, cb) => {
       if (!origin) return cb(null, true);
 
+      console.log(Cors, origin);
+
       const CekDomain = Cors.some(domain => {
         const sanitizedDomain = domain.replace('*.', '(.*\\.)?').replace(/\./g, '\\.');
         const regex = new RegExp(`^https?:\\/\\/${sanitizedDomain}$`);
