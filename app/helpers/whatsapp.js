@@ -39,8 +39,10 @@ module.exports = async (inputs) => {
         const shouldReconnect = (lastDisconnect.error instanceof Boom) ? lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut : false;
 
         if (shouldReconnect) {
-          console.log('Reconnecting...');
-          await connectToWhatsApp();
+          if (inputs.onQR) {
+            console.log('Reconnecting...');
+            await connectToWhatsApp();
+          }
         } else {
           console.log('Logged out, not reconnecting.');
         }

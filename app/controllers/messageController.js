@@ -21,7 +21,9 @@ module.exports = {
     const message = req.body.message;
 
     const client = await req.server.Whatsapp.findOne({
-      token
+      where: {
+        token
+      }
     });
 
     if (!client) {
@@ -66,7 +68,9 @@ module.exports = {
     const messages = req.body.messages;
 
     const client = await req.server.Whatsapp.findOne({
-      token
+      where: {
+        token
+      }
     });
 
     if (!client) {
@@ -84,7 +88,7 @@ module.exports = {
           for (let i = 0; i < messages.length; i++) {
             setTimeout(async () => {
               await sock.sendMessage(format(messages[i].number), {
-                text: messages[i].message + " #" + i
+                text: messages[i].message
               });
             }, 1000 * i);
           }
