@@ -76,7 +76,6 @@ module.exports = {
       });
     }
 
-
     try {
       const sock = await req.server.helperWhatsapp({
         nama: client.nama,
@@ -85,7 +84,7 @@ module.exports = {
           for (let i = 0; i < messages.length; i++) {
             setTimeout(async () => {
               await sock.sendMessage(format(messages[i].number), {
-                text: messages[i].message
+                text: messages[i].message + " #" + i
               });
             }, 1000 * i);
           }
