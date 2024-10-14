@@ -15,18 +15,11 @@ module.exports = (fastify) => {
 
       console.log(Cors, origin);
 
-      const regexes = Cors.map(domain => {
-        const sanitizedDomain = domain.replace('*.', '(.+\\.)?').replace(/\./g, '\\.');
-        const regex = new RegExp(`^https?:\\/\\/${sanitizedDomain}($|\\/)`);
-        console.log(`Generated regex for ${domain}: ${regex}`);
-        return regex;
+      const regexList = Cors.map(domain => {
+        return new RegExp(`^https?:\/\/(.*\\.)?${domain.replace(/\./g, '\\.')}$`);
       });
 
-      const isAllowed = regexes.some(regex => {
-        const match = regex.test(origin);
-        console.log(`Testing ${origin} against ${regex}: ${match}`);
-        return match;
-      });
+      const isAllowed = regexList.some(regex => regex.test(origin));
 
       if (isAllowed) {
         cb(null, true);
