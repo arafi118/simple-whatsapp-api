@@ -17,10 +17,16 @@ module.exports = (fastify) => {
 
       const regexes = Cors.map(domain => {
         const sanitizedDomain = domain.replace('*.', '(.*\\.)?').replace(/\./g, '\\.');
-        return new RegExp(`^https?:\\/\\/${sanitizedDomain}$`);
+        const regex = new RegExp(`^https?:\\/\\/${sanitizedDomain}$`);
+        console.log(`Generated regex for ${domain}: ${regex}`);
+        return regex;
       });
 
-      const isAllowed = regexes.some(regex => regex.test(origin));
+      const isAllowed = regexes.some(regex => {
+        const match = regex.test(origin);
+        console.log(`Testing ${origin} against ${regex}: ${match}`);
+        return match;
+      });
 
       if (isAllowed) {
         cb(null, true);
