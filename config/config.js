@@ -20,6 +20,7 @@ module.exports = (fastify) => {
       });
 
       const isAllowed = regexList.some(regex => regex.test(origin));
+      console.log(isAllowed);
 
       if (isAllowed) {
         cb(null, true);

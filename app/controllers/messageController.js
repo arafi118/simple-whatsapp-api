@@ -38,9 +38,11 @@ module.exports = {
         nama: client.nama,
         token,
         onConnect: async (sock) => {
-          await sock.sendMessage(number, {
+          const sendMessage = await sock.sendMessage(number, {
             text: message
           });
+
+          console.log(sendMessage)
         }
       });
 
