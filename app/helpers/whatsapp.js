@@ -20,7 +20,7 @@ module.exports = async (inputs) => {
     saveCreds
   } = await useMultiFileAuthState(authPath);
 
-  const connectToWhatsApp = async () => {
+  const connectToWhatsApp = async (Reconnect = 0) => {
     var sock = makeWASocket({
       printQRInTerminal: true,
       auth: state,
@@ -39,9 +39,11 @@ module.exports = async (inputs) => {
         const shouldReconnect = (lastDisconnect.error instanceof Boom) ? lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut : false;
 
         if (shouldReconnect) {
-          if (inputs.onQR) {
+          if (inputs.onQR || Reconnect <= 2) {
             console.log('Reconnecting...');
-            await connectToWhatsApp();
+            Reconnect += 1;
+
+            await connectToWhatsApp(Reconnect);
           }
         } else {
           console.log('Logged out, not reconnecting.');
