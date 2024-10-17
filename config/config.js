@@ -13,6 +13,8 @@ module.exports = (fastify) => {
     origin: (origin, cb) => {
       if (!origin) return cb(null, true);
 
+      console.log(Cors, origin);
+
       const regexList = Cors.map(domain => {
         return new RegExp(`^https?:\/\/(.*\\.)?${domain.replace(/\./g, '\\.')}$`);
       });
